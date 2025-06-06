@@ -1,0 +1,16 @@
+{
+  "name": "com.oxentegames.version",
+  "displayName": "Hyper Version",
+  "version": "0.3.3",
+  "unity": "2022.3",
+  "unityRelease": "62f1",
+  "description": "Show custom version in runtime",
+  "author": {
+    "name": "Valdeci Danilo",
+    "email": "contato@oxentegames.com.br"
+  },
+  "keywords": [
+    "version"
+  ],
+  "preview": false
+}
