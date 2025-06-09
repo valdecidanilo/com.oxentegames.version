@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build;
@@ -16,10 +17,14 @@ namespace CustomVersion.Editor
             Path.Combine(Application.dataPath, "Resources", "version.json");
 
         static VersionJsonManager()
-            => CreateOrUpdateVersionJson(initial: true);
+        {
+            CreateOrUpdateVersionJson(initial: true);
+        }
 
         public void OnPreprocessBuild(BuildReport report)
-            => CreateOrUpdateVersionJson(initial: false);
+        {
+            CreateOrUpdateVersionJson(initial: false);
+        }
 
         private static void CreateOrUpdateVersionJson(bool initial)
         {
@@ -30,10 +35,11 @@ namespace CustomVersion.Editor
 
             if (initial || !File.Exists(VersionFilePath))
             {
-                data = new VersionData {
+                data = new VersionData
+                {
                     release     = PlayerSettings.bundleVersion,
                     build       = "0",
-                    data        = System.DateTime.Now.ToString("yyyy-MM-dd"),
+                    data        = DateTime.Now.ToString("yyyy-MM-dd"),
                     environment = "dev"
                 };
             }
@@ -50,12 +56,11 @@ namespace CustomVersion.Editor
                 }
 
                 data.release = PlayerSettings.bundleVersion;
-
                 if (!initial)
                 {
                     if (!int.TryParse(data.build, out var b)) b = 0;
                     data.build = (++b).ToString();
-                    data.data  = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    data.data  = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 }
             }
 
@@ -64,11 +69,10 @@ namespace CustomVersion.Editor
                 int choice = EditorUtility.DisplayDialogComplex(
                     "Selecionar Ambiente",
                     "Escolha o ambiente para esta build:",
-                    "Dev",
-                    "Release",
-                    "Stg"
+                    "Dev", "Release", "Stg"
                 );
-                data.environment = choice switch {
+                data.environment = choice switch
+                {
                     0 => "dev",
                     1 => "release",
                     2 => "stg",
@@ -80,14 +84,16 @@ namespace CustomVersion.Editor
             try
             {
                 File.WriteAllText(VersionFilePath, json);
-                Debug.Log($"[VersionJsonManager] version.json {(initial?"criado":"atualizado")} em Resources:\n{json}");
+                Debug.Log($"[VersionJsonManager] version.json {(initial ? "criado" : "atualizado")} em Resources:\n{json}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"[VersionJsonManager] falha ao escrever version.json: {ex.Message}");
             }
 
             AssetDatabase.Refresh();
+            AssetDatabase.ImportAsset("Assets/Resources/version.json", ImportAssetOptions.ForceSynchronousImport);
+            AssetDatabase.SaveAssets();
         }
     }
 }
