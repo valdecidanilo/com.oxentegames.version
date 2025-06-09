@@ -28,7 +28,7 @@ public static class StreamingAssetsCreator
         {
             var initial = new VersionData
             {
-                release     = "v" + PlayerSettings.bundleVersion,
+                release     = PlayerSettings.bundleVersion,
                 build       = "0",
                 data        = "0",
                 environment = "dev"
