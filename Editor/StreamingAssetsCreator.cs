@@ -1,45 +1,63 @@
+// Assets/Editor/HyperVersionInitializer.cs
+
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using CustomVersion.Core; // se sua VersionData ficar num namespace diferente, ajuste aqui
 
-namespace CustomVersion.Core
+[InitializeOnLoad]
+public static class StreamingAssetsCreator
 {
-    [InitializeOnLoad]
-    static class StreamingAssetsCreator
+    // caminho completo para Assets/StreamingAssets/version.json
+    private static readonly string jsonPath =
+        Path.Combine(Application.streamingAssetsPath, "version.json");
+
+    // Executa logo após o Editor recompilar os scripts
+    static HyperVersionInitializer()
     {
-        private static readonly string defaultJson =
-        "{\n" +
-        "    \"release\": \"v0.0.0\",\n" +
-        "    \"build\":   \"0\",\n" +
-        "    \"date\":    \"0\"\n" +
-        "    \"environment\":    \"dev\"\n" +
-        "}";
-        static StreamingAssetsCreator()
+        EditorApplication.delayCall += EnsureVersionJsonExists;
+    }
+
+    // Também disponível em Tools → HyperVersion → Initialize
+    [MenuItem("Tools/HyperVersion/Initialize")]
+    public static void EnsureVersionJsonExists()
+    {
+        // 1) Garante que a pasta StreamingAssets exista
+        var saPath = Application.streamingAssetsPath;
+        if (!Directory.Exists(saPath))
         {
-            EditorApplication.delayCall += EnsureStreamingAssets;
+            Directory.CreateDirectory(saPath);
+            Debug.Log($"[HyperVersion] Criada pasta StreamingAssets em: {saPath}");
         }
 
-        private static void EnsureStreamingAssets()
+        // 2) Se version.json não existe, cria com valores iniciais
+        if (!File.Exists(jsonPath))
         {
-            var saPath = Application.streamingAssetsPath;
-            if (!Directory.Exists(saPath))
+            var initial = new VersionData
             {
-                Directory.CreateDirectory(saPath);
-                Debug.Log($"[Hyper Version] Criada pasta: {saPath}");
-            }
-            if (!File.Exists(jsonPath))
+                release     = "v" + PlayerSettings.bundleVersion,
+                build       = "0",
+                data        = "0",
+                environment = "dev"
+            };
+            string defaultJson = JsonUtility.ToJson(initial, true);
+
+            try
             {
-                try
-                {
-                    File.WriteAllText(jsonPath, defaultJson);
-                    Debug.Log($"[Hyper Version] Criado version.json em: {jsonPath}");
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"[Hyper Version] Falha ao criar version.json: {ex.Message}");
-                }
+                File.WriteAllText(jsonPath, defaultJson);
+                Debug.Log($"[HyperVersion] Criado version.json em: {jsonPath}\n{defaultJson}");
             }
-            AssetDatabase.Refresh();
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[HyperVersion] Falha ao criar version.json: {ex.Message}");
+            }
         }
+        else
+        {
+            Debug.Log($"[HyperVersion] version.json já existe em: {jsonPath}");
+        }
+
+        // 3) Atualiza o Project window
+        AssetDatabase.Refresh();
     }
 }
