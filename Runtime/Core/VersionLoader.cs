@@ -23,7 +23,7 @@ namespace CustomVersion.Core
 
         private IEnumerator LoadVersion()
         {
-            var path = Path.Combine(Application.streamingAssetsPath, "version.json");
+            var path = Path.Combine(Application.streamingAssetsPath, "/version.json");
     		UnityWebRequest www = UnityWebRequest.Get(path);
     		yield return www.SendWebRequest();
 
