@@ -1,57 +1,43 @@
-﻿using System.Collections;
-using System.IO;
-using Newtonsoft.Json;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace CustomVersion.Core
 {
     public class VersionLoader : MonoBehaviour
     {
         private TMP_Text _textComp;
-
-        public void Init(TMP_Text textComp)
-        {
-            _textComp = textComp;
-        }
+        public void Init(TMP_Text textComp) => _textComp = textComp;
 
         private void Start()
         {
-            StartCoroutine(LoadVersion());
-        }
+            // Carrega o JSON dos Resources
+            var ta = Resources.Load<TextAsset>("version");
+            if (ta == null)
+            {
+                _textComp.text = "v0.0.0.0";
+                return;
+            }
 
-        private IEnumerator LoadVersion()
-        {
-            var path = Path.Combine(Application.streamingAssetsPath, "/version.json");
-    		UnityWebRequest www = UnityWebRequest.Get(path);
-    		yield return www.SendWebRequest();
+            VersionData data;
+            try
+            {
+                data = JsonUtility.FromJson<VersionData>(ta.text);
+            }
+            catch
+            {
+                _textComp.text = "v0.0.0.0";
+                return;
+            }
 
-    		if (www.result == UnityWebRequest.Result.ConnectionError ||
-        		www.result == UnityWebRequest.Result.ProtocolError)
-    		{
-        		yield break;
-    		}
+            if (data == null || data.environment == "release")
+            {
+                _textComp.text = "";
+                return;
+            }
 
-    		VersionData data;
-    		try
-    		{
-        		data = JsonConvert.DeserializeObject<VersionData>(www.downloadHandler.text);
-    		}
-    		catch
-    		{
-        		yield break;
-    		}
-    		if (data == null || data.environment == "release")
-        		yield break;
-
-    		if (data != null)
-    		{
-        		if (!string.IsNullOrEmpty(data.environment))
-            		_textComp.text = $"v{data.release}.{data.build}-{data.environment}";
-        		else
-            		_textComp.text = $"v{data.release}.{data.build}";
-    		}
+            _textComp.text = !string.IsNullOrEmpty(data.environment)
+                ? $"v{data.release}.{data.build}-{data.environment}"
+                : $"v{data.release}.{data.build}";
         }
     }
 }
