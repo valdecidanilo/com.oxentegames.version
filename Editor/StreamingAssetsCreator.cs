@@ -1,28 +1,22 @@
-// Assets/Editor/HyperVersionInitializer.cs
-
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using CustomVersion.Core; // se sua VersionData ficar num namespace diferente, ajuste aqui
+using CustomVersion.Core;
 
 [InitializeOnLoad]
 public static class StreamingAssetsCreator
 {
-    // caminho completo para Assets/StreamingAssets/version.json
     private static readonly string jsonPath =
         Path.Combine(Application.streamingAssetsPath, "version.json");
 
-    // Executa logo após o Editor recompilar os scripts
-    static HyperVersionInitializer()
+    static StreamingAssetsCreator()
     {
         EditorApplication.delayCall += EnsureVersionJsonExists;
     }
 
-    // Também disponível em Tools → HyperVersion → Initialize
     [MenuItem("Tools/HyperVersion/Initialize")]
     public static void EnsureVersionJsonExists()
     {
-        // 1) Garante que a pasta StreamingAssets exista
         var saPath = Application.streamingAssetsPath;
         if (!Directory.Exists(saPath))
         {
@@ -30,7 +24,6 @@ public static class StreamingAssetsCreator
             Debug.Log($"[HyperVersion] Criada pasta StreamingAssets em: {saPath}");
         }
 
-        // 2) Se version.json não existe, cria com valores iniciais
         if (!File.Exists(jsonPath))
         {
             var initial = new VersionData
@@ -57,7 +50,6 @@ public static class StreamingAssetsCreator
             Debug.Log($"[HyperVersion] version.json já existe em: {jsonPath}");
         }
 
-        // 3) Atualiza o Project window
         AssetDatabase.Refresh();
     }
 }

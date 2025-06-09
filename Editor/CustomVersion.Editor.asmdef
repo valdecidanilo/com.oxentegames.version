@@ -2,9 +2,7 @@
     "name": "CustomVersion.Editor",
     "rootNamespace": "",
     "references": [
-        "CustomVersion.Core",
-        "UnityEditor.CoreModule",
-        "UnityEditor.BuildPipelineModule"
+        "CustomVersion.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [
