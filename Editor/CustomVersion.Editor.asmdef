@@ -4,9 +4,11 @@
     "references": [
         "CustomVersion.Core"
     ],
-    "includePlatforms": [],
-    "excludePlatforms": [
+    "includePlatforms": [
         "Editor"
+    ],
+    "excludePlatforms": [
+        
     ],
     "allowUnsafeCode": false,
     "overrideReferences": false,
