@@ -16,11 +16,6 @@ namespace CustomVersion.Editor
         private static readonly string VersionFilePath =
             Path.Combine(Application.dataPath, "Resources", "version.json");
 
-        static VersionJsonManager()
-        {
-            CreateOrUpdateVersionJson(initial: true);
-        }
-
         public void OnPreprocessBuild(BuildReport report)
         {
             CreateOrUpdateVersionJson(initial: false);
@@ -56,6 +51,7 @@ namespace CustomVersion.Editor
                 }
 
                 data.release = PlayerSettings.bundleVersion;
+
                 if (!int.TryParse(data.build, out var b)) b = 0;
                 data.build = (++b).ToString();
                 data.data  = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -68,6 +64,7 @@ namespace CustomVersion.Editor
                     "Escolha o ambiente para esta build:",
                     "Dev", "Release", "Stg"
                 );
+
                 data.environment = choice switch
                 {
                     0 => "dev",
@@ -91,6 +88,14 @@ namespace CustomVersion.Editor
             AssetDatabase.Refresh();
             AssetDatabase.ImportAsset("Assets/Resources/version.json", ImportAssetOptions.ForceSynchronousImport);
             AssetDatabase.SaveAssets();
+        }
+        [MenuItem("Tools/Custom Version/Reset version.json")]
+        public static void ResetVersionFile()
+        {
+            if (EditorUtility.DisplayDialog("Resetar version.json?", "Tem certeza que deseja resetar o version.json para build 0 e ambiente dev?", "Sim", "Cancelar"))
+            {
+                CreateOrUpdateVersionJson(initial: true);
+            }
         }
     }
 }

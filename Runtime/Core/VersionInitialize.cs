@@ -29,17 +29,17 @@ namespace CustomVersion.Core
             var textGo = new GameObject("VersionText");
             textGo.transform.SetParent(canvasGO.transform, false);
             var text = textGo.AddComponent<TextMeshProUGUI>();
-
-            text.text = $"v{versionData.release}.{versionData.build}-{versionData.environment}";
-            text.fontSize = 24;
+            if(versionData.environment != "release") text.text = $"v{versionData.release}.{versionData.build}-{versionData.environment}";
+            else if(versionData.environment == string.Empty) text.text = $"v{versionData.release}.{versionData.build}";
+            text.fontSize = 15;
             text.alignment = TextAlignmentOptions.BottomRight;
 
             var rect = text.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(1, 0);
             rect.anchorMax = new Vector2(1, 0);
             rect.pivot = new Vector2(1, 0);
-            rect.anchoredPosition = new Vector2(-10, 10);
-            rect.sizeDelta = new Vector2(300, 50);
+            rect.anchoredPosition = new Vector2(-10, 5);
+            rect.sizeDelta = new Vector2(500, 20);
         }
     }
 }
