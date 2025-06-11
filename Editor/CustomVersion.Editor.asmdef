@@ -2,7 +2,7 @@
     "name": "CustomVersion.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:c780f849880c74c4a9ec4cf17fa6ea6f"
+        "CustomVersion.Core"
     ],
     "includePlatforms": [
         "Editor"
