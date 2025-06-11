@@ -15,7 +15,6 @@ namespace CustomVersion.Core
             var jsonFile = Resources.Load<TextAsset>("version");
             if (jsonFile == null)
             {
-                Debug.LogError("Arquivo version.json não encontrado em Resources!");
                 return;
             }
 
