@@ -56,17 +56,14 @@ namespace CustomVersion.Editor
                 }
 
                 data.release = PlayerSettings.bundleVersion;
-                if (!initial)
-                {
-                    if (!int.TryParse(data.build, out var b)) b = 0;
-                    data.build = (++b).ToString();
-                    data.data  = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                if (!int.TryParse(data.build, out var b)) b = 0;
+                data.build = (++b).ToString();
+                data.data  = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
 
             if (!initial)
             {
-                int choice = EditorUtility.DisplayDialogComplex(
+                var choice = EditorUtility.DisplayDialogComplex(
                     "Selecionar Ambiente",
                     "Escolha o ambiente para esta build:",
                     "Dev", "Release", "Stg"

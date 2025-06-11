@@ -1,6 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 namespace CustomVersion.Core
 {
     public abstract class VersionInitialize
@@ -8,23 +8,38 @@ namespace CustomVersion.Core
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeCanvasVersion()
         {
-            var canvasInst =new GameObject("CanvasVersion").AddComponent<Canvas>();
-            canvasInst.renderMode = RenderMode.ScreenSpaceOverlay;
-            Object.DontDestroyOnLoad(canvasInst);
+            TMP_Settings.LoadDefaultSettings();
+            
+            var jsonFile = Resources.Load<TextAsset>("version");
+            if (jsonFile == null)
+            {
+                Debug.LogError("Arquivo version.json não encontrado em Resources!");
+                return;
+            }
 
-            var versionTextComp = new GameObject("Version_Text").AddComponent<TextMeshProUGUI>();
-            versionTextComp.transform.SetParent(canvasInst.transform);
-            versionTextComp.alignment = TextAlignmentOptions.MidlineRight;
-            var rectText = (RectTransform) versionTextComp.GetComponent<Transform>();
-            rectText.anchorMin = Vector2.right;
-            rectText.anchorMax = Vector2.right;
-            rectText.pivot = Vector2.right;
-            rectText.sizeDelta = new Vector2(1058f, 50f);
-            rectText.anchoredPosition = Vector2.zero;
-            if (versionTextComp == null) return;
+            var versionData = JsonUtility.FromJson<VersionData>(jsonFile.text);
 
-            var loader = canvasInst.gameObject.AddComponent<VersionLoader>();
-            loader.Init(versionTextComp);
+            var canvasGO = new GameObject("CanvasVersion");
+            var canvas = canvasGO.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 99;
+            canvas.vertexColorAlwaysGammaSpace = true;
+            canvasGO.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+
+            var textGo = new GameObject("VersionText");
+            textGo.transform.SetParent(canvasGO.transform, false);
+            var text = textGo.AddComponent<TextMeshProUGUI>();
+
+            text.text = $"v{versionData.release}.{versionData.build}-{versionData.environment}";
+            text.fontSize = 24;
+            text.alignment = TextAlignmentOptions.BottomRight;
+
+            var rect = text.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1, 0);
+            rect.anchorMax = new Vector2(1, 0);
+            rect.pivot = new Vector2(1, 0);
+            rect.anchoredPosition = new Vector2(-10, 10);
+            rect.sizeDelta = new Vector2(300, 50);
         }
     }
 }

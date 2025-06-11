@@ -1,61 +1,59 @@
-using UnityEditor;
-using UnityEngine;
 using System.IO;
 using CustomVersion.Core;
+using UnityEditor;
+using UnityEngine;
 
-[InitializeOnLoad]
-public static class ResourcesVersionCreator
+namespace CustomVersion.Editor
 {
-    private const string ResourcesFolderPath = "Assets/Resources";
-    private const string VersionFileName    = "version.json";
-    private static readonly string VersionFilePath =
-        Path.Combine(Application.dataPath, "Resources", VersionFileName);
-
-    static ResourcesVersionCreator()
+    [InitializeOnLoad]
+    public static class ResourcesVersionCreator
     {
-        EditorApplication.delayCall += EnsureResourcesVersionJson;
-    }
+        private const string ResourcesFolderPath = "Assets/Resources";
+        private const string VersionFileName    = "version.json";
+        private static readonly string VersionFilePath =
+            Path.Combine(Application.dataPath, "Resources", VersionFileName);
 
-    [MenuItem("Tools/HyperVersion/Initialize Resources")]
-    public static void InitializeResourcesVersion()
-    {
-        EnsureResourcesVersionJson();
-    }
-
-    private static void EnsureResourcesVersionJson()
-    {
-        if (!AssetDatabase.IsValidFolder(ResourcesFolderPath))
+        static ResourcesVersionCreator()
         {
-            AssetDatabase.CreateFolder("Assets", "Resources");
-            Debug.Log($"[HyperVersion] Criada pasta Resources em: {ResourcesFolderPath}");
+            EditorApplication.delayCall += EnsureResourcesVersionJson;
         }
 
-        if (!File.Exists(VersionFilePath))
+        [MenuItem("Tools/HyperVersion/Initialize Resources")]
+        public static void InitializeResourcesVersion()
         {
-            var initial = new VersionData
-            {
-                release     = PlayerSettings.bundleVersion,
-                build       = "0",
-                data        = "0",
-                environment = "dev"
-            };
-            string defaultJson = JsonUtility.ToJson(initial, true);
+            EnsureResourcesVersionJson();
+        }
 
-            try
+        private static void EnsureResourcesVersionJson()
+        {
+            if (!AssetDatabase.IsValidFolder(ResourcesFolderPath))
             {
-                File.WriteAllText(VersionFilePath, defaultJson);
-                Debug.Log($"[HyperVersion] Criado {VersionFileName} em Resources:\n{defaultJson}");
+                AssetDatabase.CreateFolder("Assets", "Resources");
+                Debug.Log($"[HyperVersion] Criada pasta Resources em: {ResourcesFolderPath}");
             }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[HyperVersion] Falha ao criar {VersionFileName}: {ex.Message}");
-            }
-        }
-        else
-        {
-            Debug.Log($"[HyperVersion] {VersionFileName} já existe em Resources.");
-        }
 
-        AssetDatabase.Refresh();
+            if (!File.Exists(VersionFilePath))
+            {
+                var initial = new VersionData
+                {
+                    release     = PlayerSettings.bundleVersion,
+                    build       = "0",
+                    data        = "0",
+                    environment = "dev"
+                };
+                var defaultJson = JsonUtility.ToJson(initial, true);
+                try
+                {
+                    File.WriteAllText(VersionFilePath, defaultJson);
+                    Debug.Log($"[HyperVersion] Criado {VersionFileName} em Resources:\n{defaultJson}");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[HyperVersion] Falha ao criar {VersionFileName}: {ex.Message}");
+                }
+            }
+
+            AssetDatabase.Refresh();
+        }
     }
 }

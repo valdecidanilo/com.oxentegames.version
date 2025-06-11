@@ -1,13 +1,14 @@
 {
-    "name": "CustomVersion.Core",
+    "name": "Core",
     "rootNamespace": "",
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
-    "includePlatforms": [],
-    "excludePlatforms": [
+    "includePlatforms": [
+        "Editor",
         "WebGL"
     ],
+    "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
