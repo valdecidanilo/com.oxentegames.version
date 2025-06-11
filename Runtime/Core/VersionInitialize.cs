@@ -5,7 +5,6 @@ using UnityEngine.Scripting;
 
 namespace CustomVersion.Core
 {
-    [Preserve]
     public abstract class VersionInitialize
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

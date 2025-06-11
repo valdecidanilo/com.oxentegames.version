@@ -10,6 +10,7 @@ namespace CustomVersion.Editor
     {
         private const string ResourcesFolderPath = "Assets/Resources";
         private const string VersionFileName    = "version.json";
+        private static readonly string BootStrapPath = Path.Combine(Application.dataPath, "HyperVersion", "BootStrapVersion.cs");
         private static readonly string VersionFilePath =
             Path.Combine(Application.dataPath, "Resources", VersionFileName);
 
@@ -41,6 +42,42 @@ namespace CustomVersion.Editor
                     data        = "0",
                     environment = "dev"
                 };
+                Directory.CreateDirectory(Path.GetDirectoryName(BootStrapPath));
+                string bootstrapScript = @"// AUTO-GERADO PELO HYPERVERSION
+using UnityEngine;
+using CustomVersion.Core;
+
+namespace HyperVersion.Runtime
+{
+    internal class BootStrapVersion : MonoBehaviour
+    {
+#if UNITY_EDITOR
+        [UnityEditor.InitializeOnLoadMethod]
+        static void EditorPing()
+        {
+            Debug.Log(""[BootStrapVersion] Forçando inclusão de CustomVersion.Core."");
+        }
+#endif
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void RuntimePing()
+        {
+            Debug.Log(""[BootStrapVersion] Forçando inclusão de CustomVersion.Core no build."");
+            var dummy = new VersionData
+            {
+                release = ""0"",
+                build = ""0"",
+                data = ""0"",
+                environment = ""dev""
+            };
+            Debug.Log($""[BootStrapVersion] Dummy version: {dummy.release}.{dummy.build}"");
+        }
+    }
+}
+";
+
+                File.WriteAllText(BootStrapPath, bootstrapScript);
+                Debug.Log($"[HyperVersion] Criado BootStrapVersion.cs em: {BootStrapPath}");
                 var defaultJson = JsonUtility.ToJson(initial, true);
                 try
                 {
