@@ -1,4 +1,4 @@
-namespace CustomVersion.Core
+namespace HyperVersion.Core
 {
     [System.Serializable]
     public class VersionData

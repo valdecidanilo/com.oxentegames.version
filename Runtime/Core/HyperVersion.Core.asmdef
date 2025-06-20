@@ -1,5 +1,5 @@
 {
-    "name": "CustomVersion.Core",
+    "name": "HyperVersion.Core",
     "rootNamespace": "",
     "references": [
         "Unity.TextMeshPro"

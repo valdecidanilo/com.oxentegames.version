@@ -1,4 +1,4 @@
-using CustomVersion.Core;
+using HyperVersion.Core;
 using UnityEngine;
 public class ShowVersion : MonoBehaviour
 {

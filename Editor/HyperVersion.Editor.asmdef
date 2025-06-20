@@ -1,8 +1,8 @@
 {
-    "name": "CustomVersion.Editor",
+    "name": "HyperVersion.Editor",
     "rootNamespace": "",
     "references": [
-        "CustomVersion.Core"
+        "HyperVersion.Core"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,9 +1,9 @@
 using System.IO;
-using CustomVersion.Core;
+using HyperVersion.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace CustomVersion.Editor
+namespace HyperVersion.Editor
 {
     [InitializeOnLoad]
     public static class ResourcesVersionCreator
@@ -19,7 +19,6 @@ namespace CustomVersion.Editor
             EditorApplication.delayCall += EnsureResourcesVersionJson;
         }
 
-        [MenuItem("Tools/HyperVersion/Initialize Resources")]
         public static void InitializeResourcesVersion()
         {
             EnsureResourcesVersionJson();
@@ -45,7 +44,7 @@ namespace CustomVersion.Editor
                 Directory.CreateDirectory(Path.GetDirectoryName(BootStrapPath));
                 string bootstrapScript = @"// AUTO-GERADO PELO HYPERVERSION
 using UnityEngine;
-using CustomVersion.Core;
+using HyperVersion.Core;
 
 namespace HyperVersion.Runtime
 {
@@ -62,7 +61,7 @@ namespace HyperVersion.Runtime
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RuntimePing()
         {
-            Debug.Log(""[BootStrapVersion] Forçando inclusão de CustomVersion.Core no build."");
+            Debug.Log(""[BootStrapVersion] Inclusão do Hyperversion."");
             var dummy = new VersionData
             {
                 release = ""0"",
@@ -89,7 +88,6 @@ namespace HyperVersion.Runtime
                     Debug.LogError($"[HyperVersion] Falha ao criar {VersionFileName}: {ex.Message}");
                 }
             }
-
             AssetDatabase.Refresh();
         }
     }

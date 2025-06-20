@@ -4,9 +4,9 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-using CustomVersion.Core;
+using HyperVersion.Core;
 
-namespace CustomVersion.Editor
+namespace HyperVersion.Editor
 {
     public class VersionJsonManager : IPreprocessBuildWithReport
     {
@@ -78,18 +78,17 @@ namespace CustomVersion.Editor
             try
             {
                 File.WriteAllText(VersionFilePath, json);
-                Debug.Log($"[VersionJsonManager] version.json {(initial ? "criado" : "atualizado")} em Resources:\n{json}");
+                Debug.Log($"[HyperVersion] version.json {(initial ? "criado" : "atualizado")} em Resources:\n{json}");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[VersionJsonManager] falha ao escrever version.json: {ex.Message}");
+                Debug.LogError($"[HyperVersion] falha ao escrever version.json: {ex.Message}");
             }
 
             AssetDatabase.Refresh();
             AssetDatabase.ImportAsset("Assets/Resources/version.json", ImportAssetOptions.ForceSynchronousImport);
             AssetDatabase.SaveAssets();
         }
-        [MenuItem("Tools/Custom Version/Reset version.json")]
         public static void ResetVersionFile()
         {
             if (EditorUtility.DisplayDialog("Resetar version.json?", "Tem certeza que deseja resetar o version.json para build 0 e ambiente dev?", "Sim", "Cancelar"))
