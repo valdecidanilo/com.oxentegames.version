@@ -21,14 +21,6 @@ namespace HyperVersion.Editor
         private void OnEnable()
         {
             settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
-            if (settings == null)
-            {
-                settings = CreateInstance<HyperVersionSettings>();
-                if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                    AssetDatabase.CreateFolder("Assets", "Resources");
-                AssetDatabase.CreateAsset(settings, "Assets/Resources/HyperVersionSettings.asset");
-                AssetDatabase.SaveAssets();
-            }
 
             previewStyle = new GUIStyle(EditorStyles.boldLabel)
             {
