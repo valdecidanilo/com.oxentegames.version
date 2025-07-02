@@ -9,6 +9,7 @@ namespace HyperVersion.Editor
     public static class ResourcesVersionCreator
     {
         private const string ResourcesFolderPath = "Assets/Resources";
+        private const string SettingsAssetPath = "Assets/Resources/HyperVersionSettings.asset";
         private const string VersionFileName    = "version.json";
         private static readonly string BootStrapPath = Path.Combine(Application.dataPath, "HyperVersion", "BootStrapVersion.cs");
         private static readonly string VersionFilePath =
@@ -31,7 +32,13 @@ namespace HyperVersion.Editor
                 AssetDatabase.CreateFolder("Assets", "Resources");
                 Debug.Log($"[HyperVersion] Criada pasta Resources em: {ResourcesFolderPath}");
             }
-
+            if (!File.Exists(SettingsAssetPath))
+            {
+                var settings = ScriptableObject.CreateInstance<HyperVersionSettings>();
+                AssetDatabase.CreateAsset(settings, SettingsAssetPath);
+                AssetDatabase.SaveAssets();
+                Debug.Log("[HyperVersion] Criado HyperVersionSettings.asset em Resources.");
+            }
             if (!File.Exists(VersionFilePath))
             {
                 var initial = new VersionData
