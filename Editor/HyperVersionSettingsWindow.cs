@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using HyperVersion.Core;
+using System.IO;
 
 namespace HyperVersion.Editor
 {
@@ -11,10 +12,12 @@ namespace HyperVersion.Editor
         private GUIStyle previewStyle;
 
         [MenuItem("Tools/HyperVersion/Settings")]
-        private static void Open() =>
-            GetWindow<HyperVersionSettingsWindow>("HyperVersion Settings");
+        private static void Open()
+        {
+            var window = GetWindow<HyperVersionSettingsWindow>("HyperVersion Settings");
+            window.minSize = new Vector2(320f, 80f);
+        }
 
-        // ──────────────────────────────────────────────────────────────────────────
         private void OnEnable()
         {
             settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
@@ -73,7 +76,35 @@ namespace HyperVersion.Editor
                     ResourcesVersionCreator.InitializeResourcesVersion();
                 }
             }
+            
+            EditorGUILayout.Space(10);
+            
+            EditorGUILayout.LabelField("Versão Atual (version.json)", EditorStyles.boldLabel);
 
+            var versionAsset = Resources.Load<TextAsset>("version");
+            if (versionAsset != null)
+            {
+                var versionData = JsonUtility.FromJson<VersionData>(versionAsset.text);
+
+                EditorGUI.BeginChangeCheck();
+                versionData.release     = EditorGUILayout.TextField("Release",     versionData.release);
+                versionData.build       = EditorGUILayout.TextField("Build",       versionData.build);
+                versionData.data        = EditorGUILayout.TextField("Data",        versionData.data);
+                versionData.environment = EditorGUILayout.TextField("Ambiente",    versionData.environment);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    string newJson = JsonUtility.ToJson(versionData, true);
+                    string path = "Assets/Resources/version.json";
+                    File.WriteAllText(path, newJson);
+                    AssetDatabase.Refresh();
+                    Debug.Log("[HyperVersion] version.json atualizado manualmente.");
+                }
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("version.json não encontrado em Resources.", MessageType.Warning);
+            }
             GUILayout.Space(10);
 
             EditorGUILayout.LabelField("Opções de exibição", EditorStyles.boldLabel);
@@ -88,10 +119,11 @@ namespace HyperVersion.Editor
                 UpdatePreview();
             }
 
-            EditorGUILayout.Space(12);
+            EditorGUILayout.Space(2);
             EditorGUILayout.LabelField("Preview (runtime)", previewStyle, GUILayout.Height(30));
             EditorGUILayout.HelpBox(preview, MessageType.Info);
         }
+
         private void UpdatePreview()
         {
             string release = "v0.0.0";
