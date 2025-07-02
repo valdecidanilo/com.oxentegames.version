@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Scripting;
@@ -29,8 +29,10 @@ namespace HyperVersion.Core
             var canvas   = canvasGo.AddComponent<Canvas>();
             canvas.renderMode  = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 99;
-            canvasGo.AddComponent<CanvasScaler>().uiScaleMode =
-                CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            
+            var canvasScaler = canvas.gameObject.AddComponent<CanvasScaler>();
+            canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            canvasScaler.matchWidthOrHeight = 0.5f;
 
             var textGo = new GameObject("VersionText", typeof(TextMeshProUGUI));
             textGo.transform.SetParent(canvasGo.transform, false);
