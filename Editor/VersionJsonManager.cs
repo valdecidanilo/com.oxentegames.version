@@ -91,10 +91,7 @@ namespace HyperVersion.Editor
         }
         public static void ResetVersionFile()
         {
-            if (EditorUtility.DisplayDialog("Resetar version.json?", "Tem certeza que deseja resetar o version.json para build 0 e ambiente dev?", "Sim", "Cancelar"))
-            {
                 CreateOrUpdateVersionJson(initial: true);
-            }
         }
     }
 }
