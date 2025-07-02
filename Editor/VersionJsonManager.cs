@@ -34,7 +34,7 @@ namespace HyperVersion.Editor
                 {
                     release     = PlayerSettings.bundleVersion,
                     build       = "0",
-                    data        = DateTime.Now.ToString("yyyy-MM-dd"),
+                    data        = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     environment = "dev"
                 };
             }
