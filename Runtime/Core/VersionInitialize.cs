@@ -41,12 +41,12 @@ namespace HyperVersion.Core
                 text.text      = versionString;
                 text.fontSize  = 15;
                 text.alignment = TextAlignmentOptions.BottomRight;
+                var rt = text.rectTransform;
+                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1, 0);
+                rt.anchoredPosition = new Vector2(-10, 5);
+                rt.sizeDelta        = new Vector2(500, 20);
             }
-            var rt = text.rectTransform;
-            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1, 0);
-            rt.anchoredPosition = new Vector2(-10, 5);
-            rt.sizeDelta        = new Vector2(500, 20);
-
+            
             Object.DontDestroyOnLoad(canvasGo);
         }
     }
