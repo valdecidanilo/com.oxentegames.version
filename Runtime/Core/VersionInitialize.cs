@@ -33,14 +33,15 @@ namespace HyperVersion.Core
             var canvasScaler = canvas.gameObject.AddComponent<CanvasScaler>();
             canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasScaler.matchWidthOrHeight = 0.5f;
-
-            var textGo = new GameObject("VersionText", typeof(TextMeshProUGUI));
-            textGo.transform.SetParent(canvasGo.transform, false);
-            var text = textGo.GetComponent<TextMeshProUGUI>();
-            text.text      = versionString;
-            text.fontSize  = 15;
-            text.alignment = TextAlignmentOptions.BottomRight;
-
+            if (data.environment != "release")
+            {
+                var textGo = new GameObject("VersionText", typeof(TextMeshProUGUI));
+                textGo.transform.SetParent(canvasGo.transform, false);
+                var text = textGo.GetComponent<TextMeshProUGUI>();
+                text.text      = versionString;
+                text.fontSize  = 15;
+                text.alignment = TextAlignmentOptions.BottomRight;
+            }
             var rt = text.rectTransform;
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1, 0);
             rt.anchoredPosition = new Vector2(-10, 5);
