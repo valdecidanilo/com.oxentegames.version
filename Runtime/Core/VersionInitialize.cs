@@ -33,7 +33,7 @@ namespace HyperVersion.Core
             var canvasScaler = canvas.gameObject.AddComponent<CanvasScaler>();
             canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasScaler.matchWidthOrHeight = 0.5f;
-            if (data.environment != "release")
+            if (data.environment != "release" && data.environment != "stg")
             {
                 var textGo = new GameObject("VersionText", typeof(TextMeshProUGUI));
                 textGo.transform.SetParent(canvasGo.transform, false);
