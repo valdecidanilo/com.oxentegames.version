@@ -7,6 +7,7 @@ namespace HyperVersion.Core
 {
     public abstract class VersionInitialize
     {
+        [Preserve]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeCanvasVersion()
         {
@@ -15,6 +16,8 @@ namespace HyperVersion.Core
             var jsonFile = Resources.Load<TextAsset>("version");
             if (jsonFile == null) return;
             var data = JsonUtility.FromJson<VersionData>(jsonFile.text);
+
+            Debug.Log($"[HyperVersion] Game version: {data.release}.{data.build}");
 
             var settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
             if (settings == null) settings = ScriptableObject.CreateInstance<HyperVersionSettings>();
