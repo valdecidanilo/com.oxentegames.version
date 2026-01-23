@@ -46,7 +46,7 @@ namespace HyperVersion.Core
                 text.alignment = TextAlignmentOptions.BottomRight;
                 var rt = text.rectTransform;
                 rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1, 0);
-                rt.anchoredPosition = new Vector2(-10, 5);
+                rt.anchoredPosition = new Vector2(-10, 14);
                 rt.sizeDelta        = new Vector2(500, 20);
             }
             
