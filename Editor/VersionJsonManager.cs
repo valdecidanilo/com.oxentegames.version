@@ -62,14 +62,14 @@ namespace HyperVersion.Editor
                 var choice = EditorUtility.DisplayDialogComplex(
                     "Selecionar Ambiente",
                     "Escolha o ambiente para esta build:",
-                    "Dev", "Release", "Stg"
+                    "Dev", "Release", "Hml"
                 );
 
                 data.environment = choice switch
                 {
                     0 => "dev",
                     1 => "release",
-                    2 => "stg",
+                    2 => "hml",
                     _ => data.environment
                 };
             }

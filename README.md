@@ -12,7 +12,7 @@
 | **Overlay de Versão** | Cria um *Canvas* overlay no `BeforeSceneLoad` contendo release, build, data e ambiente. |
 | **version.json**      | Arquivo em `Assets/Resources/version.json` atualizado automaticamente no Editor. |
 | **Contador de Builds**| `IPreprocessBuild` incrementa o campo **build** a cada Player Build. |
-| **Ambientes**         | Popup (Dev / Stg / Release) antes do build ⇢ grava `environment`. |
+| **Ambientes**         | Popup (Dev / Hml / Release) antes do build ⇢ grava `environment`. |
 | **Janela de Settings**| `Tools ▸ HyperVersion ▸ Settings` (pré‑visualização ao vivo). |
 | **Botões rápidos**    | *Resetar version.json* e *Inicializar Resources* diretamente da UI. |
 
@@ -49,7 +49,7 @@
   "release"    : "1.3.2",           // refletido de PlayerSettings.bundleVersion
   "build"      : "7",               // incrementado a cada build
   "data"       : "2025-06-20 14:21",
-  "environment": "dev"              // dev / stg / release
+  "environment": "dev"              // dev / hml / release
 }
 ```
 
