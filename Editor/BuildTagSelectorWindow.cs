@@ -17,7 +17,7 @@ namespace HyperVersion.Editor
             Confirmed = false;
 
             var window = CreateInstance<BuildTagSelectorWindow>();
-            window.titleContent = new GUIContent("Tag de Versão");
+            window.titleContent = new GUIContent("[HyperVersion] Tag de Versão");
             window.minSize = new Vector2(340, 150);
             window.maxSize = new Vector2(340, 150);
 
