@@ -35,7 +35,7 @@ namespace HyperVersion.Editor
                     release     = PlayerSettings.bundleVersion,
                     build       = "0",
                     data        = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    environment = "dev"
+                    environment = "development"
                 };
             }
             else
@@ -59,35 +59,14 @@ namespace HyperVersion.Editor
 
             if (!initial)
             {
-                var choice = EditorUtility.DisplayDialogComplex(
-                    "Selecionar Ambiente",
-                    "Escolha o ambiente para esta build:",
-                    "Dev", "Cancelar", "Release/Hml"
-                );
+                EnvironmentSelectorWindow.Show();
 
-                if (choice == 1)
+                if (!EnvironmentSelectorWindow.Confirmed)
                     throw new BuildFailedException("[HyperVersion] Build cancelada pelo usuário.");
 
-                if (choice == 2)
-                {
-                    var subChoice = EditorUtility.DisplayDialogComplex(
-                        "Selecionar Ambiente",
-                        "Qual ambiente?",
-                        "Release", "Cancelar", "Hml"
-                    );
-
-                    if (subChoice == 1)
-                        throw new BuildFailedException("[HyperVersion] Build cancelada pelo usuário.");
-
-                    data.environment = subChoice == 0 ? "release" : "hml";
-                }
-                else
-                {
-                    data.environment = "dev";
-                }
+                data.environment = EnvironmentSelectorWindow.SelectedEnvironment;
             }
 
-            // Só chega aqui se não cancelou
             var json = JsonUtility.ToJson(data, true);
             try
             {
