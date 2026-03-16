@@ -59,12 +59,12 @@ namespace HyperVersion.Editor
 
             if (!initial)
             {
-                EnvironmentSelectorWindow.Show();
+                BuildTagSelectorWindow.Show();
 
-                if (!EnvironmentSelectorWindow.Confirmed)
+                if (!BuildTagSelectorWindow.Confirmed)
                     throw new BuildFailedException("[HyperVersion] Build cancelada pelo usuário.");
 
-                data.environment = EnvironmentSelectorWindow.SelectedEnvironment;
+                data.environment = BuildTagSelectorWindow.SelectedTag;
             }
 
             var json = JsonUtility.ToJson(data, true);
