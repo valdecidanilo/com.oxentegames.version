@@ -26,11 +26,14 @@ namespace HyperVersion.Editor
             var y = main.y + (main.height - 150) * 0.5f;
             window.position = new Rect(x, y, 340, 150);
 
-            window.ShowModalUtility();
+            window.ShowModal();
+            window.Focus();
         }
 
         private void OnGUI()
         {
+            FocusWindowIfItsOpen<BuildTagSelectorWindow>();
+            
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Tag visual desta build:", EditorStyles.boldLabel);
             
@@ -48,7 +51,7 @@ namespace HyperVersion.Editor
             {
                 SelectedTag = _selectedIndex switch
                 {
-                    0 => "",       // Release — sem tag
+                    0 => "release",
                     1 => "dev",
                     2 => "hml",
                     _ => ""
