@@ -62,18 +62,32 @@ namespace HyperVersion.Editor
                 var choice = EditorUtility.DisplayDialogComplex(
                     "Selecionar Ambiente",
                     "Escolha o ambiente para esta build:",
-                    "Dev", "Release", "Hml"
+                    "Dev", "Cancelar", "Release/Hml"
                 );
 
-                data.environment = choice switch
+                if (choice == 1)
+                    throw new BuildFailedException("[HyperVersion] Build cancelada pelo usuário.");
+
+                if (choice == 2)
                 {
-                    0 => "dev",
-                    1 => "release",
-                    2 => "hml",
-                    _ => data.environment
-                };
+                    var subChoice = EditorUtility.DisplayDialogComplex(
+                        "Selecionar Ambiente",
+                        "Qual ambiente?",
+                        "Release", "Cancelar", "Hml"
+                    );
+
+                    if (subChoice == 1)
+                        throw new BuildFailedException("[HyperVersion] Build cancelada pelo usuário.");
+
+                    data.environment = subChoice == 0 ? "release" : "hml";
+                }
+                else
+                {
+                    data.environment = "dev";
+                }
             }
 
+            // Só chega aqui se não cancelou
             var json = JsonUtility.ToJson(data, true);
             try
             {
@@ -89,9 +103,10 @@ namespace HyperVersion.Editor
             AssetDatabase.ImportAsset("Assets/Resources/version.json", ImportAssetOptions.ForceSynchronousImport);
             AssetDatabase.SaveAssets();
         }
+
         public static void ResetVersionFile()
         {
-                CreateOrUpdateVersionJson(initial: true);
+            CreateOrUpdateVersionJson(initial: true);
         }
     }
 }
