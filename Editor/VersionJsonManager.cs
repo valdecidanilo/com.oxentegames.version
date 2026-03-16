@@ -10,7 +10,7 @@ namespace HyperVersion.Editor
 {
     public class VersionJsonManager : IPreprocessBuildWithReport
     {
-        public int callbackOrder => 0;
+        public int callbackOrder => 1;
 
         private const string ResourcesFolder = "Assets/Resources";
         private static readonly string VersionFilePath =
