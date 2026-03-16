@@ -23,7 +23,7 @@ namespace HyperVersion.Editor
 
             var main = EditorGUIUtility.GetMainWindowPosition();
             var x = main.x + (main.width - 340) * 0.5f;
-            var y = main.y + (main.height - 150) * 0.5f;
+            var y = main.y + (main.height - 150) * 0.5f + 150f;
             window.position = new Rect(x, y, 340, 150);
 
             window.ShowModal();
