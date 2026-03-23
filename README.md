@@ -149,10 +149,10 @@ Para que a versão apareça fora do jogo na WebGL, você precisa editar o `index
 Exemplo:
 
 ```text
-Assets/WebGLTemplates/HyperVersionTemplate/index.html
+Assets/WebGLTemplates/YOUR_TEMPLATE/index.html
 ```
 
-Ou no template que você já usa no projeto.
+No template que você já usa no projeto.
 
 ### Passo 1: adicionar o container da versão
 
@@ -251,32 +251,6 @@ ShowVersion.OnShowVersion?.Invoke(true);
 ```
 
 Se você quiser expor futuramente uma API como `HyperVersionAPI.Current`, ela pode usar o mesmo `VersionData` carregado de `StreamingAssets`.
-
----
-
-## 🧩 Resumo da mudança principal
-
-### Antes
-- `version.json` ficava em:
-  ```text
-  Assets/Resources/version.json
-  ```
-- servia bem para o Unity
-- não era a melhor abordagem para leitura direta no `index.html`
-
-### Agora
-- `version.json` fica em:
-  ```text
-  Assets/StreamingAssets/version.json
-  ```
-- pode ser lido:
-  - pelo Unity
-  - pelo `index.html`
-- a versão no jogo pode ser controlada em runtime com:
-  ```csharp
-  ShowVersion.OnShowVersion?.Invoke(true);
-  ShowVersion.OnShowVersion?.Invoke(false);
-  ```
 
 ---
 
