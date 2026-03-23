@@ -38,8 +38,7 @@ namespace HyperVersion.Editor
                     build = "0",
                     date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     environment = "dev",
-                    show_version_web = true,
-                    show_version_game = false
+                    show_version_web = true
                 };
             }
             else
@@ -76,7 +75,7 @@ namespace HyperVersion.Editor
             var json = JsonUtility.ToJson(data, true);
             File.WriteAllText(VersionFilePath, json);
 
-            Debug.Log($"[HyperVersion] version.json atualizado em StreamingAssets:\n{json}");
+            Debug.Log($"[HyperVersion] version.json atualizado em StreamingAssets:\\n{json}");
 
             AssetDatabase.Refresh();
             AssetDatabase.ImportAsset(VersionAssetPath, ImportAssetOptions.ForceSynchronousImport);

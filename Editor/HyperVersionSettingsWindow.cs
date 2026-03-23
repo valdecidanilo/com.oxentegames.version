@@ -1,206 +1,100 @@
+using System.IO;
+using HyperVersion.Core;
 using UnityEditor;
 using UnityEngine;
-using HyperVersion.Core;
-using System.IO;
 
 namespace HyperVersion.Editor
 {
     public class HyperVersionSettingsWindow : EditorWindow
     {
-        private HyperVersionSettings settings;
-        private string   preview;
-        private GUIStyle previewStyle;
+        private HyperVersionSettings _settings;
+        private const string SettingsPath = "Assets/Resources/HyperVersionSettings.asset";
+        private const string VersionJsonPath = "Assets/StreamingAssets/version.json";
 
         [MenuItem("Tools/HyperVersion/Settings")]
-        private static void Open()
+        public static void ShowWindow()
         {
-            var window = GetWindow<HyperVersionSettingsWindow>("HyperVersion Settings");
-            window.minSize = new Vector2(320f, 80f);
+            GetWindow<HyperVersionSettingsWindow>("HyperVersion Settings");
         }
 
         private void OnEnable()
         {
-            settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
+            _settings = AssetDatabase.LoadAssetAtPath<HyperVersionSettings>(SettingsPath);
 
-            // Try to create and reload if not found
-            if (settings == null)
+            if (_settings == null)
             {
-                Debug.Log("[HyperVersion] HyperVersionSettings not found. Initializing Resources...");
-                ResourcesVersionCreator.InitializeResourcesVersion();
-                settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
-                if (settings != null)
-                    Debug.Log("[HyperVersion] HyperVersionSettings loaded after initialization.");
-                else
-                    Debug.LogWarning("[HyperVersion] Failed to load HyperVersionSettings after initialization attempt.");
+                HyperVersionProjectInitializer.InitializeProject();
+                _settings = AssetDatabase.LoadAssetAtPath<HyperVersionSettings>(SettingsPath);
             }
-
-            previewStyle = new GUIStyle(EditorStyles.boldLabel)
-            {
-                fontSize   = 15,
-                alignment  = TextAnchor.MiddleCenter,
-                normal     = { textColor = Color.cyan }
-            };
-
-            UpdatePreview();
         }
 
         private void OnGUI()
         {
-            EditorGUI.DrawRect(new Rect(0, 0, position.width, 60),
-                               new Color(0.2f, 0.4f, 0.7f));
-
-            var titleStyle = new GUIStyle(EditorStyles.label)
+            if (_settings == null)
             {
-                fontSize  = 20,
-                alignment = TextAnchor.MiddleLeft,
-                padding   = new RectOffset(10, 0, 10, 0),
-                normal    = { textColor = Color.white }
-            };
-
-            GUILayout.Space(10);
-            GUILayout.Label("HyperVersion Settings", titleStyle);
-            GUILayout.Space(20);
-
-            // Guard clause: settings missing
-            if (settings == null)
-            {
-                EditorGUILayout.HelpBox(
-                    "HyperVersionSettings not found. Click 'Inicializar Resources' to create the required assets.",
-                    MessageType.Warning
-                );
-
-                using (new EditorGUILayout.HorizontalScope())
+                EditorGUILayout.HelpBox("HyperVersionSettings não encontrado.", MessageType.Warning);
+                if (GUILayout.Button("Inicializar Projeto"))
                 {
-                    GUILayout.FlexibleSpace();
-                    if (GUILayout.Button("Inicializar Resources", GUILayout.Width(200)))
-                    {
-                        Debug.Log("[HyperVersion] Initialize Resources requested from settings window.");
-                        ResourcesVersionCreator.InitializeResourcesVersion();
-                        settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
-                        if (settings != null)
-                        {
-                            Debug.Log("[HyperVersion] Resources initialized and HyperVersionSettings loaded.");
-                            UpdatePreview();
-                            Repaint();
-                        }
-                        else
-                        {
-                            Debug.LogWarning("[HyperVersion] Initialization finished, but HyperVersionSettings is still unavailable.");
-                        }
-                    }
-                    GUILayout.FlexibleSpace();
+                    HyperVersionProjectInitializer.InitializeProject();
+                    _settings = AssetDatabase.LoadAssetAtPath<HyperVersionSettings>(SettingsPath);
                 }
-
-                return; // stop drawing to avoid null usage below
+                return;
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            EditorGUILayout.LabelField("Configurações Visuais", EditorStyles.boldLabel);
+            EditorGUI.BeginChangeCheck();
+            _settings.showBuild = EditorGUILayout.ToggleLeft("Mostrar Build", _settings.showBuild);
+            _settings.showEnvTag = EditorGUILayout.ToggleLeft("Mostrar Ambiente", _settings.showEnvTag);
+            _settings.showDate = EditorGUILayout.ToggleLeft("Mostrar Data", _settings.showDate);
+
+            if (EditorGUI.EndChangeCheck())
             {
-                if (GUILayout.Button("Resetar version.json"))
-                {
-                    if (EditorUtility.DisplayDialog("Resetar version.json?",
-                        "Tem certeza que deseja resetar o version.json para build 0 e ambiente dev?",
-                        "Sim", "Cancelar"))
-                    {
-                        Debug.Log("[HyperVersion] version.json reset requested by user.");
-                        VersionJsonManager.ResetVersionFile();
-                    }
-                }
-
-                GUILayout.FlexibleSpace();
-
-                if (GUILayout.Button("Inicializar Resources"))
-                {
-                    Debug.Log("[HyperVersion] Initialize Resources requested by user.");
-                    ResourcesVersionCreator.InitializeResourcesVersion();
-                    var before = settings;
-                    settings = Resources.Load<HyperVersionSettings>("HyperVersionSettings");
-                    if (settings != null && before == null)
-                    {
-                        Debug.Log("[HyperVersion] HyperVersionSettings created and loaded.");
-                        UpdatePreview();
-                    }
-                    else
-                    {
-                        Debug.Log("[HyperVersion] Resources verified. No changes needed.");
-                    }
-                }
+                EditorUtility.SetDirty(_settings);
+                AssetDatabase.SaveAssets();
             }
-            
-            EditorGUILayout.Space(10);
-            
-            EditorGUILayout.LabelField("Versao Atual (version.json)", EditorStyles.boldLabel);
 
-            string path = "Assets/StreamingAssets/version.json";
-            if (File.Exists(path))
+            EditorGUILayout.Space(12);
+            EditorGUILayout.LabelField("version.json", EditorStyles.boldLabel);
+
+            if (File.Exists(VersionJsonPath))
             {
-                var json = File.ReadAllText(path);
-                var versionData = JsonUtility.FromJson<VersionData>(json);
+                var json = File.ReadAllText(VersionJsonPath);
+                var versionData = JsonUtility.FromJson<VersionData>(json) ?? new VersionData();
 
                 EditorGUI.BeginChangeCheck();
                 versionData.release = EditorGUILayout.TextField("Release", versionData.release);
                 versionData.build = EditorGUILayout.TextField("Build", versionData.build);
                 versionData.date = EditorGUILayout.TextField("Date", versionData.date);
-                versionData.environment = EditorGUILayout.TextField("Ambiente", versionData.environment);
+                versionData.environment = EditorGUILayout.TextField("Environment", versionData.environment);
                 versionData.show_version_web = EditorGUILayout.ToggleLeft("Mostrar na Web", versionData.show_version_web);
-                versionData.show_version_game = EditorGUILayout.ToggleLeft("Mostrar no Jogo", versionData.show_version_game);
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    File.WriteAllText(path, JsonUtility.ToJson(versionData, true));
+                    File.WriteAllText(VersionJsonPath, JsonUtility.ToJson(versionData, true));
                     AssetDatabase.Refresh();
-                    Debug.Log("[HyperVersion] version.json atualizado manualmente em StreamingAssets.");
                 }
             }
             else
             {
-                EditorGUILayout.HelpBox("version.json nao encontrado em StreamingAssets.", MessageType.Warning);
-            }
-            GUILayout.Space(10);
+                EditorGUILayout.HelpBox("version.json não encontrado em StreamingAssets.", MessageType.Warning);
 
-            EditorGUILayout.LabelField("Opcoes de exibicao", EditorStyles.boldLabel);
-            EditorGUI.BeginChangeCheck();
-            settings.showBuild  = EditorGUILayout.ToggleLeft("Mostrar No Build", settings.showBuild);
-            settings.showEnvTag = EditorGUILayout.ToggleLeft("Mostrar Ambiente", settings.showEnvTag);
-            settings.showDate   = EditorGUILayout.ToggleLeft("Mostrar Data",     settings.showDate);
-            if (EditorGUI.EndChangeCheck())
-            {
-                EditorUtility.SetDirty(settings);
-                AssetDatabase.SaveAssets();
-                UpdatePreview();
-            }
-
-            EditorGUILayout.Space(2);
-            EditorGUILayout.LabelField("Preview (runtime)", previewStyle, GUILayout.Height(30));
-            EditorGUILayout.HelpBox(preview, MessageType.Info);
-        }
-
-        private void UpdatePreview()
-        {
-            if (settings == null)
-            {
-                preview = "HyperVersionSettings indisponivel - inicialize os Resources.";
-                if (previewStyle != null)
+                if (GUILayout.Button("Criar version.json"))
                 {
-                    previewStyle.normal.textColor = Color.gray;
+                    HyperVersionProjectInitializer.InitializeProject();
                 }
-                return;
             }
 
-            string release = "v0.0.0";
-            string build   = ".42";
-            string envTag  = "-dev";
-            string date    = "/2025-06-20 09:44:04";
+            EditorGUILayout.Space(12);
 
-            preview = release;
-            if (settings.showBuild)  preview += build;
-            if (settings.showEnvTag) preview += envTag;
-            if (settings.showDate)   preview += date;
+            if (GUILayout.Button("Resetar version.json"))
+            {
+                VersionJsonManager.ResetVersionFile();
+            }
 
-            previewStyle.normal.textColor =
-                (settings.showBuild || settings.showEnvTag || settings.showDate)
-                    ? Color.cyan
-                    : Color.gray;
+            if (GUILayout.Button("Inicializar Projeto"))
+            {
+                HyperVersionProjectInitializer.InitializeProject();
+            }
         }
     }
 }
