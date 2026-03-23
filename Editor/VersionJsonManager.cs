@@ -38,7 +38,7 @@ namespace HyperVersion.Editor
                     build = "0",
                     date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     environment = "dev",
-                    show_version_web = true
+                    show_version = true
                 };
             }
             else

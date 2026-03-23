@@ -66,7 +66,7 @@ namespace HyperVersion.Editor
                 versionData.build = EditorGUILayout.TextField("Build", versionData.build);
                 versionData.date = EditorGUILayout.TextField("Date", versionData.date);
                 versionData.environment = EditorGUILayout.TextField("Environment", versionData.environment);
-                versionData.show_version_web = EditorGUILayout.ToggleLeft("Mostrar na Web", versionData.show_version_web);
+                versionData.show_version = EditorGUILayout.ToggleLeft("Mostrar na Web", versionData.show_version);
 
                 if (EditorGUI.EndChangeCheck())
                 {

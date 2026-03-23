@@ -71,7 +71,7 @@ namespace HyperVersion.Editor
                 build = "0",
                 date = "0",
                 environment = "dev",
-                show_version_web = true
+                show_version = true
             };
 
             File.WriteAllText(VersionFilePath, JsonUtility.ToJson(initial, true));
