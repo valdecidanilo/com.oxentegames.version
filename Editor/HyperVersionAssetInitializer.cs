@@ -22,7 +22,7 @@ namespace HyperVersion.Editor
         private static readonly string JslibFilePath =
             Path.Combine(Application.dataPath, "Plugins", "WebGL", "HyperVersionWebGL.jslib");
 
-        static HyperVersionProjectInitializer()
+        static HyperVersionAssetInitializer()
         {
             EditorApplication.delayCall += EnsureProjectAssets;
         }
