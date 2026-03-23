@@ -42,7 +42,7 @@
 | Passo | Ação |
 |---|---|
 | **1.** | Abra **Tools ▸ HyperVersion ▸ Settings**. |
-| **2.** | Edite os dados do `version.json`, incluindo `release`, `build`, `environment` e `show_version_web`. |
+| **2.** | Edite os dados do `version.json`, incluindo `release`, `build`, `environment` e `show_version`. |
 | **3.** | Faça o build normalmente. O pacote atualizará automaticamente o `version.json`. |
 | **4.** | No template WebGL, adicione o script que lê `StreamingAssets/version.json`. |
 | **5.** | Se quiser, controle show/hide da versão no HTML chamando Unity → JavaScript com `.jslib`. |
@@ -57,7 +57,7 @@
   "build": "7",
   "date": "2026-03-23 14:21:00",
   "environment": "dev",
-  "show_version_web": true
+  "show_version": true
 }
 ```
 
@@ -69,7 +69,7 @@
 | `build` | Incrementado automaticamente a cada build |
 | `date` | Data/hora da última atualização do arquivo |
 | `environment` | Ambiente do build: `dev`, `hml` ou `release` |
-| `show_version_web` | Controla se a versão aparece no `index.html` |
+| `show_version` | Controla se a versão aparece no `index.html` |
 
 ### Local do arquivo
 
@@ -122,7 +122,7 @@ Coloque esse script antes do fechamento do `</body>`:
       const data = await response.json();
 
       const shouldShow =
-        data.show_version_web === true &&
+        data.show_version === true &&
         data.environment !== "release";
 
       let version = `v${data.release ?? "0.0.0"}`;
@@ -240,7 +240,7 @@ Quando a build WebGL for gerada:
 
 - o `version.json` estará disponível em `StreamingAssets/version.json`
 - o `index.html` fará `fetch` desse arquivo
-- se `show_version_web` for `true` e o ambiente não for `release`, a versão será exibida
+- se `show_version` for `true` e o ambiente não for `release`, a versão será exibida
 - o Unity poderá mostrar ou esconder essa versão chamando `HyperVersionWebController.Show()` e `HyperVersionWebController.Hide()`
 
 ---
