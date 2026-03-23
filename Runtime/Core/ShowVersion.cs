@@ -1,24 +1,34 @@
 using System;
 using TMPro;
-using HyperVersion.Core;
 using UnityEngine;
-public class ShowVersion : MonoBehaviour
+
+namespace HyperVersion.Core
 {
-    public static Action<bool> OnShowVersion;
-    private TMP_Text _versionText;
-    private void OnEnabled()
+    public class ShowVersion : MonoBehaviour
     {
-        OnShowVersion += Show;
+        public static Action<bool> OnShowVersion;
+
+        private TMP_Text _versionText;
+
+        public void Initialize(TMP_Text text)
+        {
+            _versionText = text;
+        }
+
+        private void OnEnable()
+        {
+            OnShowVersion += EnableVersionInfo;
+        }
+
+        private void OnDisable()
+        {
+            OnShowVersion -= EnableVersionInfo;
+        }
+
+        private void EnableVersionInfo(bool isShow)
+        {
+            if (_versionText == null) return;
+            _versionText.enabled = isShow;
+        }
     }
-    private void OnDisabled()
-    {
-        OnShowVersion -= Show;
-    }
-    public void Initialize(TMP_Text text, string typeAmbience)
-    {
-        _versionText = text;
-        var isRelease = typeAmbience.Equals("release", StringComparison.CurrentCultureIgnoreCase) || typeAmbience.Equals("hml", StringComparison.CurrentCultureIgnoreCase);
-        if(isRelease) _versionText.enabled = false;
-    }
-    private void EnableVersionInfo(bool isShow) => _versionText.enabled = isShow;
 }

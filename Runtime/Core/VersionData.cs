@@ -5,7 +5,9 @@ namespace HyperVersion.Core
     {
         public string release;
         public string build;
-        public string data;
+        public string date;
         public string environment;
+        public bool show_version_web = true;
+        public bool show_version_game = false;
     }
 }

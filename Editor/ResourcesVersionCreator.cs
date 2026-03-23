@@ -9,44 +9,51 @@ namespace HyperVersion.Editor
     public static class ResourcesVersionCreator
     {
         private const string ResourcesFolderPath = "Assets/Resources";
+        private const string StreamingAssetsFolderPath = "Assets/StreamingAssets";
         private const string SettingsAssetPath = "Assets/Resources/HyperVersionSettings.asset";
-        private const string VersionFileName    = "version.json";
+
         private static readonly string VersionFilePath =
-            Path.Combine(Application.dataPath, "Resources", VersionFileName);
+            Path.Combine(Application.dataPath, "StreamingAssets", "version.json");
 
         static ResourcesVersionCreator()
         {
-            EditorApplication.delayCall += EnsureResourcesVersionJson;
+            EditorApplication.delayCall += EnsureVersionAssets;
         }
 
         public static void InitializeResourcesVersion()
         {
-            EnsureResourcesVersionJson();
+            EnsureVersionAssets();
         }
 
-        private static void EnsureResourcesVersionJson()
+        private static void EnsureVersionAssets()
         {
             if (!AssetDatabase.IsValidFolder(ResourcesFolderPath))
-            {
                 AssetDatabase.CreateFolder("Assets", "Resources");
-                Debug.Log($"[HyperVersion] Criada pasta Resources em: {ResourcesFolderPath}");
-            }
+
+            if (!AssetDatabase.IsValidFolder(StreamingAssetsFolderPath))
+                AssetDatabase.CreateFolder("Assets", "StreamingAssets");
+
             if (!File.Exists(SettingsAssetPath))
             {
                 var settings = ScriptableObject.CreateInstance<HyperVersionSettings>();
                 AssetDatabase.CreateAsset(settings, SettingsAssetPath);
                 AssetDatabase.SaveAssets();
-                Debug.Log("[HyperVersion] Criado HyperVersionSettings.asset em Resources.");
             }
+
             if (!File.Exists(VersionFilePath))
             {
                 var initial = new VersionData
                 {
-                    release     = PlayerSettings.bundleVersion,
-                    build       = "0",
-                    data        = "0",
-                    environment = "dev"
+                    release = PlayerSettings.bundleVersion,
+                    build = "0",
+                    date = "0",
+                    environment = "dev",
+                    show_version_web = true,
+                    show_version_game = false
                 };
+
+                File.WriteAllText(VersionFilePath, JsonUtility.ToJson(initial, true));
+                AssetDatabase.Refresh();
             }
         }
     }

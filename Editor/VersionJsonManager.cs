@@ -12,9 +12,11 @@ namespace HyperVersion.Editor
     {
         public int callbackOrder => 1;
 
-        private const string ResourcesFolder = "Assets/Resources";
+        private const string StreamingAssetsFolder = "Assets/StreamingAssets";
+        private const string VersionAssetPath = "Assets/StreamingAssets/version.json";
+
         private static readonly string VersionFilePath =
-            Path.Combine(Application.dataPath, "Resources", "version.json");
+            Path.Combine(Application.dataPath, "StreamingAssets", "version.json");
 
         public void OnPreprocessBuild(BuildReport report)
         {
@@ -23,8 +25,8 @@ namespace HyperVersion.Editor
 
         private static void CreateOrUpdateVersionJson(bool initial)
         {
-            if (!AssetDatabase.IsValidFolder(ResourcesFolder))
-                AssetDatabase.CreateFolder("Assets", "Resources");
+            if (!AssetDatabase.IsValidFolder(StreamingAssetsFolder))
+                AssetDatabase.CreateFolder("Assets", "StreamingAssets");
 
             VersionData data;
 
@@ -32,10 +34,12 @@ namespace HyperVersion.Editor
             {
                 data = new VersionData
                 {
-                    release     = PlayerSettings.bundleVersion,
-                    build       = "0",
-                    data        = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    environment = "development"
+                    release = PlayerSettings.bundleVersion,
+                    build = "0",
+                    date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    environment = "dev",
+                    show_version_web = true,
+                    show_version_game = false
                 };
             }
             else
@@ -52,9 +56,11 @@ namespace HyperVersion.Editor
 
                 data.release = PlayerSettings.bundleVersion;
 
-                if (!int.TryParse(data.build, out var b)) b = 0;
+                if (!int.TryParse(data.build, out var b))
+                    b = 0;
+
                 data.build = (++b).ToString();
-                data.data  = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                data.date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
 
             if (!initial)
@@ -68,18 +74,12 @@ namespace HyperVersion.Editor
             }
 
             var json = JsonUtility.ToJson(data, true);
-            try
-            {
-                File.WriteAllText(VersionFilePath, json);
-                Debug.Log($"[HyperVersion] version.json {(initial ? "criado" : "atualizado")} em Resources:\n{json}");
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"[HyperVersion] falha ao escrever version.json: {ex.Message}");
-            }
+            File.WriteAllText(VersionFilePath, json);
+
+            Debug.Log($"[HyperVersion] version.json atualizado em StreamingAssets:\n{json}");
 
             AssetDatabase.Refresh();
-            AssetDatabase.ImportAsset("Assets/Resources/version.json", ImportAssetOptions.ForceSynchronousImport);
+            AssetDatabase.ImportAsset(VersionAssetPath, ImportAssetOptions.ForceSynchronousImport);
             AssetDatabase.SaveAssets();
         }
 

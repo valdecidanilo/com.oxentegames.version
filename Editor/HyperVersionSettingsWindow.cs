@@ -131,29 +131,30 @@ namespace HyperVersion.Editor
             
             EditorGUILayout.LabelField("Versao Atual (version.json)", EditorStyles.boldLabel);
 
-            var versionAsset = Resources.Load<TextAsset>("version");
-            if (versionAsset != null)
+            string path = "Assets/StreamingAssets/version.json";
+            if (File.Exists(path))
             {
-                var versionData = JsonUtility.FromJson<VersionData>(versionAsset.text);
+                var json = File.ReadAllText(path);
+                var versionData = JsonUtility.FromJson<VersionData>(json);
 
                 EditorGUI.BeginChangeCheck();
-                versionData.release     = EditorGUILayout.TextField("Release",     versionData.release);
-                versionData.build       = EditorGUILayout.TextField("Build",       versionData.build);
-                versionData.data        = EditorGUILayout.TextField("Data",        versionData.data);
-                versionData.environment = EditorGUILayout.TextField("Ambiente",    versionData.environment);
+                versionData.release = EditorGUILayout.TextField("Release", versionData.release);
+                versionData.build = EditorGUILayout.TextField("Build", versionData.build);
+                versionData.date = EditorGUILayout.TextField("Date", versionData.date);
+                versionData.environment = EditorGUILayout.TextField("Ambiente", versionData.environment);
+                versionData.show_version_web = EditorGUILayout.ToggleLeft("Mostrar na Web", versionData.show_version_web);
+                versionData.show_version_game = EditorGUILayout.ToggleLeft("Mostrar no Jogo", versionData.show_version_game);
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    string newJson = JsonUtility.ToJson(versionData, true);
-                    string path = "Assets/Resources/version.json";
-                    File.WriteAllText(path, newJson);
+                    File.WriteAllText(path, JsonUtility.ToJson(versionData, true));
                     AssetDatabase.Refresh();
-                    Debug.Log("[HyperVersion] version.json atualizado manualmente.");
+                    Debug.Log("[HyperVersion] version.json atualizado manualmente em StreamingAssets.");
                 }
             }
             else
             {
-                EditorGUILayout.HelpBox("version.json nao encontrado em Resources.", MessageType.Warning);
+                EditorGUILayout.HelpBox("version.json nao encontrado em StreamingAssets.", MessageType.Warning);
             }
             GUILayout.Space(10);
 
