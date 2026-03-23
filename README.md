@@ -213,7 +213,7 @@ mergeInto(LibraryManager.library, {
 - `VersionData.cs`
 - `HyperVersionWebController.cs`
 - `VersionJsonManager.cs`
-- `HyperVersionProjectInitializer.cs`
+- `HyperVersionAssetInitializer.cs`
 - `HyperVersionSettingsWindow.cs`
 - `HyperVersionSettings.cs`
 - `BuildTagSelectorWindow.cs`

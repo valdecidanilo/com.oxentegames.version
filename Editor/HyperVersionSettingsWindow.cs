@@ -23,7 +23,7 @@ namespace HyperVersion.Editor
 
             if (_settings == null)
             {
-                HyperVersionProjectInitializer.InitializeProject();
+                HyperVersionAssetInitializer.InitializeProject();
                 _settings = AssetDatabase.LoadAssetAtPath<HyperVersionSettings>(SettingsPath);
             }
         }
@@ -35,7 +35,7 @@ namespace HyperVersion.Editor
                 EditorGUILayout.HelpBox("HyperVersionSettings não encontrado.", MessageType.Warning);
                 if (GUILayout.Button("Inicializar Projeto"))
                 {
-                    HyperVersionProjectInitializer.InitializeProject();
+                    HyperVersionAssetInitializer.InitializeProject();
                     _settings = AssetDatabase.LoadAssetAtPath<HyperVersionSettings>(SettingsPath);
                 }
                 return;
@@ -80,7 +80,7 @@ namespace HyperVersion.Editor
 
                 if (GUILayout.Button("Criar version.json"))
                 {
-                    HyperVersionProjectInitializer.InitializeProject();
+                    HyperVersionAssetInitializer.InitializeProject();
                 }
             }
 
@@ -93,7 +93,7 @@ namespace HyperVersion.Editor
 
             if (GUILayout.Button("Inicializar Projeto"))
             {
-                HyperVersionProjectInitializer.InitializeProject();
+                HyperVersionAssetInitializer.InitializeProject();
             }
         }
     }
