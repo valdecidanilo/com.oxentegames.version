@@ -41,6 +41,7 @@ namespace HyperVersion.Core
                 var textGo = new GameObject("VersionText", typeof(TextMeshProUGUI));
                 textGo.transform.SetParent(canvasGo.transform, false);
                 var text = textGo.GetComponent<TextMeshProUGUI>();
+                text.gameObject.AddComponent<ShowVersion>();
                 text.text      = versionString;
                 text.fontSize  = 15;
                 text.alignment = TextAlignmentOptions.BottomRight;
