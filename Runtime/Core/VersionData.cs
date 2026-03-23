@@ -8,6 +8,6 @@ namespace HyperVersion.Core
         public string date;
         public string environment;
 
-        public bool show_version_web = true;
+        public bool show_version = true;
     }
 }
