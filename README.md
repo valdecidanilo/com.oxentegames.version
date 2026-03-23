@@ -170,14 +170,14 @@ O pacote não cria mais overlay visual dentro do Unity. Agora, a exibição é f
 ```csharp
 using HyperVersion.Core;
 
-HyperVersionWebController.Show();
-HyperVersionWebController.Hide();
+HyperVersionController.Show();
+HyperVersionController.Hide();
 ```
 
 ### Como funciona
 
-- `HyperVersionWebController.Show()` chama a função JavaScript `HyperVersion_Show`
-- `HyperVersionWebController.Hide()` chama a função JavaScript `HyperVersion_Hide`
+- `HyperVersionController.Show()` chama a função JavaScript `HyperVersion_Show`
+- `HyperVersionController.Hide()` chama a função JavaScript `HyperVersion_Hide`
 - essas funções atuam diretamente no elemento `#version-label` do `index.html`
 
 ---
@@ -211,7 +211,7 @@ mergeInto(LibraryManager.library, {
 ### Mantidos
 
 - `VersionData.cs`
-- `HyperVersionWebController.cs`
+- `HyperVersionController.cs`
 - `VersionJsonManager.cs`
 - `HyperVersionAssetInitializer.cs`
 - `HyperVersionSettingsWindow.cs`
@@ -241,7 +241,7 @@ Quando a build WebGL for gerada:
 - o `version.json` estará disponível em `StreamingAssets/version.json`
 - o `index.html` fará `fetch` desse arquivo
 - se `show_version` for `true` e o ambiente não for `release`, a versão será exibida
-- o Unity poderá mostrar ou esconder essa versão chamando `HyperVersionWebController.Show()` e `HyperVersionWebController.Hide()`
+- o Unity poderá mostrar ou esconder essa versão chamando `HyperVersionController.Show()` e `HyperVersionController.Hide()`
 
 ---
 
@@ -256,12 +256,12 @@ public class VersionActionsExample
 {
     public void ShowVersion()
     {
-        HyperVersionWebController.Show();
+        HyperVersionController.Show();
     }
 
     public void HideVersion()
     {
-        HyperVersionWebController.Hide();
+        HyperVersionController.Hide();
     }
 }
 ```
