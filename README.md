@@ -96,9 +96,9 @@ Ou o template que você já usa no projeto.
 ### Passo 1: adicionar o container da versão
 
 Coloque isso no `body`, próximo ao canvas do jogo:
-
+Caso existam outras camadas sobrepostas na página, ajuste o z-index conforme necessário para garantir que o label fique visível acima dos demais elementos.
 ```html
-<div id="version-label" style="display:none; position:absolute; right:12px; bottom:12px; color:white; font-family:Arial, sans-serif; font-size:14px; z-index:9999;">
+<div id="version-label" style="z-index: 99999; display:none; position:absolute; right:12px; bottom:12px; color:white; font-family:Arial, sans-serif; font-size:14px; z-index:9999;">
   --
 </div>
 ```
